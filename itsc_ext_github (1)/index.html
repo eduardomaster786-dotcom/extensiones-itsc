@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Extensiones ITSC – Versión Compacta</title>
+<style>
+:root{ --bg:#0b1020; --panel:#0e162b; --line:#243455; --text:#eaf2ff; --muted:#a9bde0; --chip:#132241; }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:linear-gradient(180deg,#0b1020,#0a0f1f);color:var(--text);font:14px/1.35 Inter,system-ui,Segoe UI,Roboto,Arial}
+/* Marca ITSC */
+.itsc-brand{display:flex;justify-content:center;align-items:center;padding:.35rem 0}
+.itsc-brand img{height:64px;width:auto}
+@media (max-width:640px){.itsc-brand img{height:52px}}
+/* Marca de agua (opcional: comenta si no deseas) */
+/* body::before{content:"";position:fixed;inset:0;background:url('assets/logo.png') no-repeat center 22%;
+   background-size:160px auto;opacity:.06;pointer-events:none;filter:grayscale(100%);z-index:0} */
+.container{max-width:980px;margin:8px auto;padding:0 10px;position:relative;z-index:1}
+.card{background:linear-gradient(180deg,#0e1529,#0c1326);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.35);overflow:hidden}
+/* TOOLBAR COMPACTA */
+.toolbar{position:sticky;top:0;z-index:5;backdrop-filter:blur(6px);background:rgba(12,19,38,.75);border-bottom:1px solid var(--line)}
+.toolbar-inner{display:flex;align-items:center;gap:8px;padding:8px}
+.searchbox{flex:1;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:6px 8px}
+.searchbox input{flex:1;background:transparent;border:none;color:var(--text);outline:none;font-size:14px}
+.btn{cursor:pointer;background:linear-gradient(180deg,#0f1a32,#0c162b);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:6px 9px;font-size:12px}
+.btn:active{transform:translateY(1px)}
+.badge{font-size:11px;color:var(--muted)}
+.applied{display:flex;gap:6px;flex-wrap:wrap;padding:0 8px 8px}
+.applied .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--line);border-radius:999px;padding:4px 8px;font-size:11px}
+.applied .chip button{all:unset;cursor:pointer;font-weight:700}
+/* DROPDOWNS */
+.dropdown{display:none;position:relative;border-top:1px solid var(--line);background:#0d152a}
+.dropdown.open{display:block}
+.dropdown .panel{padding:10px}
+.grid-2{display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:700px){.grid-2{grid-template-columns:1fr 1fr}}
+label.small{display:flex;align-items:center;gap:6px;background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-size:12px}
+select{width:100%;background:#0f1a32;border:1px solid var(--line);border-radius:8px;color:var(--text);padding:6px 8px;font-size:12px}
+input[type=checkbox]{accent-color:#4aa3ff}
+/* CASOS FRECUENTES MINI */
+.casos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(min-width:700px){.casos{grid-template-columns:1fr 1fr 1fr}}
+.case{background:linear-gradient(180deg,#101b33,#0c1529);border:1px solid #29406f;border-radius:10px;padding:10px;cursor:pointer}
+.case strong{font-size:12px}
+.case small{display:block;color:#cfe0ff;opacity:.9;font-size:11px;margin-top:2px}
+/* RESULTADOS CERCA DEL BUSCADOR */
+.results{padding:10px}
+.count{padding:8px 10px;color:#b9c9e8;font-size:12px}
+.item{display:grid;grid-template-columns:1fr 90px;gap:8px;align-items:center;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0}
+.item:hover{background:rgba(255,255,255,.06)}
+.puesto{font-weight:700;font-size:14px}
+.ext{justify-self:end;background:#0e1a2b;border:1px dashed #2a3b64;border-radius:8px;padding:6px 8px;font-size:14px}
+.tagbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.tag{font-size:10px;border:1px solid #2b3a60;border-radius:999px;padding:2px 6px;color:#b6c9ff}
+mark{background:linear-gradient(180deg,rgba(0,102,255,.25),rgba(0,102,255,.08));padding:0 2px;border-radius:3px;color:#fff}
+.footer{display:flex;gap:8px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:8px 10px;color:#9fb4d9;font-size:12px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+  <!-- Franja de marca ITSC -->
+  <div class="itsc-brand"><img src="assets/logo.png" alt="ITSC" loading="eager" decoding="async"></div>
+
+  <div class="container">
+    <div class="card">
+      <div class="toolbar">
+        <div class="toolbar-inner">
+          <div class="searchbox" aria-label="Buscar extensión">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a9bde0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input id="q" placeholder="Buscar: 4604, Caja, Registro, horas comunitarias… (Ctrl+K)" autocomplete="off">
+          </div>
+          <button class="btn" id="btnFiltros">Filtros</button>
+          <button class="btn" id="btnCasos">Casos</button>
+          <span class="badge" id="badgeCount">0 resultados</span>
+          <button class="btn" id="btnLimpiar">Limpiar</button>
+          <button class="btn" id="btnCSV">CSV</button>
+        </div>
+        <div class="applied" id="aplicados"></div>
+
+        <!-- DROPDOWN: FILTROS AVANZADOS -->
+        <div class="dropdown" id="ddFiltros">
+          <div class="panel">
+            <div class="grid-2" style="margin-bottom:6px">
+              <label class="small" style="flex-direction:column;align-items:flex-start">
+                <span>División</span>
+                <select id="selDivision"><option value="">Todas</option></select>
+              </label>
+              <label class="small" style="flex-direction:column;align-items:flex-start">
+                <span>Subdivisión</span>
+                <select id="selSub"><option value="">Todas</option></select>
+              </label>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <label class="small"><input type="checkbox" id="puestoExt"> Puesto Ext (0 y 300)</label>
+              <label class="small"><input type="checkbox" id="soloCoord"> Solo coordinadores de carrera</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- DROPDOWN: CASOS FRECUENTES -->
+        <div class="dropdown" id="ddCasos">
+          <div class="panel">
+            <div class="casos" id="casos"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="count" id="countTop">&nbsp;</div>
+      <div class="results" id="results"></div>
+      <div class="footer">
+        <div>Uso interno · Búsqueda sin acentos · Esc limpia · Enter copia la primera extensión</div>
+        <div style="display:flex;gap:6px"><button class="btn" id="btnCerrarFiltros">Ocultar filtros</button></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Utils
+const norm = s => (s||"").toString().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+function toast(msg){ const t=document.createElement('div'); t.textContent=msg; Object.assign(t.style,{position:'fixed',left:'50%',bottom:'14px',transform:'translateX(-50%)',background:'#0f1a32',border:'1px solid #2a3b64',color:'#d7e6ff',padding:'6px 9px',borderRadius:'9px',zIndex:9999,fontSize:'12px'}); document.body.appendChild(t); setTimeout(()=>t.remove(),1200);} 
+function copy(txt){ navigator.clipboard.writeText(txt).then(()=>toast('Copiado: '+txt)).catch(()=>{}); }
+function lev(a,b){a=norm(a);b=norm(b);const m=a.length,n=b.length;if(Math.abs(m-n)>1)return 2;const dp=new Array(n+1);for(let j=0;j<=n;j++)dp[j]=j;for(let i=1;i<=m;i++){let prev=dp[0];dp[0]=i;for(let j=1;j<=n;j++){const tmp=dp[j];dp[j]=a[i-1]===b[j-1]?prev:1+Math.min(prev,dp[j],dp[j-1]);prev=tmp}}return dp[n];}
+
+// Datos
+const DATA=(function(){
+  const D=[
+    {puesto:"Operadora Central",ext:"0",tags:["central","conmutador","recepcion"]},
+    {puesto:"Mesa de Ayuda",ext:"300",tags:["soporte","ayuda","it","ticket","mesa de ayuda"]},
+    {puesto:"Recepción Rectoría",ext:"1000",tags:["rectoria","recepcion"]},
+    {puesto:"Rector",ext:"1001",tags:["rectoria"]},
+    {puesto:"Coordinadora Rectoría",ext:"1002",tags:["rectoria"]},
+    {puesto:"Secretaria de la Junta Directiva",ext:"1003",tags:["junta"]},
+    {puesto:"Secretaria Ejecutiva de Rectoría",ext:"1004",tags:["rectoria"]},
+    {puesto:"Director de Seguridad",ext:"1005",tags:["seguridad"]},
+    {puesto:"Monitoreo y Circuito Cerrado",ext:"1006",tags:["cctv","camaras"]},
+    {puesto:"Asesor Rectoría",ext:"1007",tags:["rectoria"]},
+    {puesto:"Unidad de Auditoria Interna (UAI)",ext:"1100",tags:["auditoria","uai"]},
+    {puesto:"Consultora Juridica",ext:"1301",tags:["juridico","legal"]},
+    {puesto:"Auxiliar Juridico",ext:"1302",tags:["juridico"]},
+    {puesto:"Secretaria Dirección de Comunicaciones",ext:"1400",tags:["comunicaciones"]},
+    {puesto:"Director de Comunicaciones",ext:"1401",tags:["comunicaciones","prensa"]},
+    {puesto:"Asistente del Director de Comunicaciones",ext:"1402",tags:["comunicaciones"]},
+    {puesto:"Encargada de Relaciones Públicas",ext:"1411",tags:["pr","relaciones publicas"]},
+    {puesto:"Periodista",ext:"1412",tags:["prensa"]},
+    {puesto:"Encargada de Protocolo y Eventos",ext:"1421",tags:["eventos","protocolo"]},
+    {puesto:"Director de Planificación y Desarrollo",ext:"1501",tags:["planificacion","proyectos"]},
+    {puesto:"Encargada de Cooperación Internacional",ext:"1531",tags:["cooperacion"]},
+    {puesto:"Encargada de Relaciones Internacionales",ext:"1532",tags:["internacionales"]},
+    {puesto:"Encargada de Calidad en la Gestion",ext:"1533",tags:["calidad","satisfaccion"]},
+    {puesto:"Encargada de Formulacion y Evaluacion de Programa",ext:"1534",tags:["formulacion","evaluacion"]},
+    {puesto:"Secretaria de Gestión Humana",ext:"1600",tags:["rrhh"]},
+    {puesto:"Directora de Gestión Humana",ext:"1601",tags:["rrhh"]},
+    {puesto:"Asesora General",ext:"1602",tags:["rrhh"]},
+    {puesto:"Encargada de Registro y Control",ext:"1611",tags:["rrhh"]},
+    {puesto:"Encargado Nómina",ext:"1612",tags:["nomina","rrhh"]},
+    {puesto:"Encargada de Reclutamiento y Selección",ext:"1621",tags:["reclutamiento","rrhh"]},
+    {puesto:"Encargado de Capacitación",ext:"1631",tags:["capacitacion","rrhh"]},
+    {puesto:"Encargada de Relaciones Laborales",ext:"1641",tags:["rrhh"]},
+    {puesto:"Encargada de Servicios y Beneficios",ext:"1642",tags:["rrhh","beneficios"]},
+    {puesto:"Secretaria de la Dirección TIC",ext:"1700",tags:["tic"]},
+    {puesto:"Director TIC",ext:"1701",tags:["tic"]},
+    {puesto:"Encargado de Seguridad y Monitoreo Informático",ext:"1710",tags:["tic","seguridad"]},
+    {puesto:"Servicios TIC",ext:"1720",tags:["tic","servicios"]},
+    {puesto:"Encargado de Servicios TIC",ext:"1721",tags:["tic"]},
+    {puesto:"Técnico de Desarrollo e Implementación de Sistemas",ext:"1730",tags:["tic","desarrollo"]},
+    {puesto:"Encargado de Desarrollo e Implementación de Sistemas",ext:"1731",tags:["tic","desarrollo"]},
+    {puesto:"Webmaster",ext:"1732",tags:["tic","web"]},
+    {puesto:"Operaciones y Redes",ext:"1740",tags:["tic","redes","probus","desbloqueo"]},
+    {puesto:"Encargado de Operaciones TIC",ext:"1741",tags:["tic"]},
+    {puesto:"Encargado de Redes",ext:"1742",tags:["tic","redes"]},
+    {puesto:"Soporte Acadmedia",ext:"1743",tags:["tic","acadmedia"]},
+    {puesto:"Secretaria de la Vicerrectoría Administrativa",ext:"2000",tags:["adm"]},
+    {puesto:"Vicerrectora Administrativa",ext:"2001",tags:["adm"]},
+    {puesto:"Asistente de la Vicerrectora Administrativa",ext:"2002",tags:["adm"]},
+    {puesto:"Analista de la Vicerrectoría Administrativa",ext:"2003",tags:["adm"]},
+    {puesto:"Secretaria de la Dirección Administrativa",ext:"2100",tags:["adm"]},
+    {puesto:"Directora Administrativa",ext:"2101",tags:["adm"]},
+    {puesto:"Almacen y Suministro",ext:"2110",tags:["almacen","suministro"]},
+    {puesto:"Encargado de Almacén",ext:"2111",tags:["almacen"]},
+    {puesto:"Encargado de Suministro",ext:"2112",tags:["suministro"]},
+    {puesto:"Encargado de Economato",ext:"2113",tags:["economato"]},
+    {puesto:"Economato",ext:"2114",tags:["economato"]},
+    {puesto:"Encargada de Cafeteria",ext:"2115",tags:["cafeteria"]},
+    {puesto:"Encargado de Transportación",ext:"2121",tags:["transporte"]},
+    {puesto:"Secretaria de Compras y Contrataciones",ext:"2140",tags:["compras"]},
+    {puesto:"Encargado de Compras y Contrataciones",ext:"2141",tags:["compras"]},
+    {puesto:"Auxiliar de Compras y Contrataciones",ext:"2142",tags:["compras"]},
+    {puesto:"Encargado de Mantenimiento",ext:"2151",tags:["mantenimiento"]},
+    {puesto:"Encargado de Planta Física",ext:"2152",tags:["planta fisica"]},
+    {puesto:"Secretaria de Servicios Generales",ext:"2160",tags:["servicios generales"]},
+    {puesto:"Encargado de Servicios Generales",ext:"2161",tags:["servicios generales"]},
+    {puesto:"Secretaria de la Dirección Financiera",ext:"2200",tags:["finanzas"]},
+    {puesto:"Directora Financiera",ext:"2201",tags:["finanzas"]},
+    {puesto:"Encargado de Auditoría Interna",ext:"2202",tags:["auditoria interna"]},
+    {puesto:"Encargada de Contabilidad",ext:"2211",tags:["contabilidad"]},
+    {puesto:"Auxiliar de Contabilidad",ext:"2212",tags:["contabilidad"]},
+    {puesto:"Encargada de Gastos",ext:"2213",tags:["gastos"]},
+    {puesto:"Encargada de Presupuesto",ext:"2221",tags:["presupuesto"]},
+    {puesto:"Encargado de Tesorería",ext:"2231",tags:["tesoreria"]},
+    {puesto:"Caja (Tesorería)",ext:"2232",tags:["caja","tesoreria","pagos"]},
+    {puesto:"Encargado de Activos Fijos",ext:"2241",tags:["activos fijos"]},
+    {puesto:"Secretaria de la Vicerrectoría Académica",ext:"3000",tags:["academica"]},
+    {puesto:"Vicerrector Académico",ext:"3001",tags:["academica"]},
+    {puesto:"Asistente del Vicerrector Académico",ext:"3002",tags:["academica"]},
+    {puesto:"Auxiliar de Centro de Documentación",ext:"3100",tags:["biblioteca"]},
+    {puesto:"Director de Centro de Documentación",ext:"3101",tags:["biblioteca"]},
+    {puesto:"Encargada de Procesos Tecnicos",ext:"3102",tags:["biblioteca"]},
+    {puesto:"Encargada de Lenguas Extranjeras",ext:"3201",tags:["idiomas"]},
+    {puesto:"Secretaria de Admisión y Registro",ext:"3300",tags:["admision","registro"]},
+    {puesto:"Directora de Admisión y Registro",ext:"3301",tags:["admision","registro"]},
+    {puesto:"Secretaria Admisión",ext:"3310",tags:["admision"]},
+    {puesto:"Encargada de Admisión",ext:"3311",tags:["admision"]},
+    {puesto:"Auxiliar de Admisión",ext:"3312",tags:["admision"]},
+    {puesto:"Atención al Usuario de Registro",ext:"3320",tags:["registro","atencion"]},
+    {puesto:"Encargada de Registro",ext:"3321",tags:["registro"]},
+    {puesto:"Encargada de Calificaciones",ext:"3322",tags:["registro","notas"]},
+    {puesto:"Auxiliar de Retiro y Cambio de Carrera",ext:"3323",tags:["retiro","cambio"]},
+    {puesto:"Auxiliar de Titulación",ext:"3324",tags:["titulacion"]},
+    {puesto:"Auxiliar de Registro",ext:"3325",tags:["registro"]},
+    {puesto:"Auxiliar de Registro",ext:"3326",tags:["registro"]},
+    {puesto:"Secretaria de Orientación, Tutorias y Apoyo Académico",ext:"3400",tags:["orientacion","tutorias","apoyo academico"]},
+    {puesto:"Director de Orientación, Tutorias y Apoyo Académico",ext:"3401",tags:["orientacion"]},
+    {puesto:"Encargada de Tutorias",ext:"3411",tags:["tutorias"]},
+    {puesto:"Orientador",ext:"3422",tags:["orientacion"]},
+    {puesto:"Orientadora",ext:"3424",tags:["orientacion"]},
+    {puesto:"Orientadora",ext:"3425",tags:["orientacion"]},
+    {puesto:"Encargada de Apoyo Académico",ext:"3431",tags:["apoyo academico"]},
+    {puesto:"Secretaria de Coordinación Académica",ext:"3500",tags:["coordinacion"]},
+    {puesto:"Directora de Coordinación Académica",ext:"3501",tags:["coordinacion"]},
+    {puesto:"Salón de Profesores",ext:"3502",tags:["profesores"]},
+    {puesto:"Coordinadora de Laboratorio",ext:"3503",tags:["laboratorio"]},
+    {puesto:"Dispensario Médico",ext:"3504",tags:["salud"]},
+    {puesto:"Clinica Dental",ext:"3505",tags:["dental"]},
+    {puesto:"Coordinador de Electrónica",ext:"3531",tags:["electronica"]},
+    {puesto:"Coordinador de Mecánica Automotriz",ext:"3532",tags:["mecanica"]},
+    {puesto:"Coordinador de Electricidad y Refrigeración",ext:"3533",tags:["electricidad","refrigeracion"]},
+    {puesto:"Coordinador de Arte",ext:"3534",tags:["arte"]},
+    {puesto:"Coordinador de Fotografía",ext:"3537",tags:["fotografia"]},
+    {puesto:"Coordinador de Manufactura",ext:"3538",tags:["manufactura"]},
+    {puesto:"Coordinador de Enfermería e Imagenes Médicas",ext:"3539",tags:["salud"]},
+    {puesto:"Coordinador de Informatica",ext:"3543",tags:["informatica"]},
+    {puesto:"Coordinador de Construcción",ext:"3544",tags:["construccion"]},
+    {puesto:"Coordinador de Turismo",ext:"3545",tags:["turismo"]},
+    {puesto:"Coordinador de Salud",ext:"3548",tags:["salud"]},
+    {puesto:"Secretaria de Homologación y Curriculum",ext:"3600",tags:["homologacion","curriculum"]},
+    {puesto:"Director de Homologación y Curriculum",ext:"3601",tags:["homologacion"]},
+    {puesto:"Secretaria de Gestión Virtual / Mesa de Ayuda Virtual",ext:"3700",tags:["gestion virtual"]},
+    {puesto:"Director de Gestión Virtual",ext:"3701",tags:["gestion virtual"]},
+    {puesto:"Secretaria de Vinculación y Extensión",ext:"4000",tags:["vinculacion"]},
+    {puesto:"Vicerrector de Vinculación y Extensión",ext:"4001",tags:["vinculacion"]},
+    {puesto:"Asistente del Vicerrector de Vinculación y Extensión",ext:"4002",tags:["vinculacion"]},
+    {puesto:"Directora de Educación Permanente",ext:"4101",tags:["educacion permanente"]},
+    {puesto:"Encargado de Centro de Diseño",ext:"4201",tags:["diseno"]},
+    {puesto:"Encargada de Desarrollo Profesional",ext:"4301",tags:["desarrollo profesional"]},
+    {puesto:"Encargado de Relaciones Inter-Institucionales",ext:"4401",tags:["relaciones"]},
+    {puesto:"Encargado de Emprendimiento",ext:"4411",tags:["emprendimiento"]},
+    {puesto:"Director de Vinculación Empresarial",ext:"4421",tags:["empresarial"]},
+    {puesto:"Secretaria de Vinculación Comunitaria",ext:"4430",tags:["comunitaria"]},
+    {puesto:"Director de Vinculación Comunitaria",ext:"4431",tags:["comunitaria"]},
+    {puesto:"Encargado de la Radio Comunitaria ITSC",ext:"4501",tags:["radio"]},
+    {puesto:"Secretaria de Servicios Estudiantiles (Atencion al Estudiante)",ext:"4604",tags:["servicios estudiantiles"]},
+    {puesto:"Directora de Servicios Estudiantiles",ext:"4601",tags:["servicios estudiantiles"]},
+    {puesto:"Encargada de Becas",ext:"4602",tags:["becas"]},
+    {puesto:"Encargada de horas comunitarias",ext:"4603",tags:["servicios estudiantiles"]},
+    {puesto:"Encargada de Arte y Cultura",ext:"4631",tags:["arte","cultura"]},
+    {puesto:"Secretaria de Gestión de Riesgo",ext:"4700",tags:["riesgo"]},
+    {puesto:"Director de Gestión de Riesgo",ext:"4701",tags:["riesgo"]},
+    {puesto:"Encargado de Operaciones",ext:"4711",tags:["operaciones","riesgo"]},
+  ];
+  function inferir(ext){ const n=parseInt(ext,10); let division="", sub="";
+    if(n<1000){division="Rectoría"; sub=(n===0?"Operadora Central":"Mesa de Ayuda");}
+    if(n>=1000 && n<2000) division="Rectoría";
+    if(n>=2000 && n<3000) division="Vicerrectoría Administrativa";
+    if(n>=3000 && n<4000) division="Vicerrectoría Académica";
+    if(n>=4000 && n<4700) division="Vicerrectoría de Vinculación y Extensión";
+    if(n>=4700 && n<4800){division="Gestión de Riesgo"; sub="Gestión de Riesgo";}
+    if([1100].includes(n)) sub="Auditoría Gubernamental";
+    if([1301,1302].includes(n)) sub="Departamento Jurídico";
+    if(n>=1400 && n<=1421) sub="Dirección de Comunicaciones";
+    if([1501,1531,1532,1533,1534].includes(n)) sub="Dirección de Planificación y Desarrollo";
+    if(n>=1600 && n<=1642) sub="Dirección de Gestión Humana";
+    if(n>=1700 && n<=1743) sub="Dirección de Tecnología de la Información y Comunicación";
+    if(n>=2100 && n<=2121) sub="Dirección Administrativa";
+    if(n>=2140 && n<=2142) sub="Compras y Contrataciones";
+    if(n>=2151 && n<=2152) sub="Mantenimiento / Planta Física";
+    if(n>=2160 && n<=2161) sub="Servicios Generales";
+    if(n>=2200 && n<=2241) sub="Dirección Financiera";
+    if(n>=3100 && n<=3102) sub="Centro de Documentación (Biblioteca)";
+    if(n===3201) sub="División de Lenguas Extranjeras";
+    if(n>=3300 && n<=3326) sub="Departamento de Admisión y Registro";
+    if(n>=3400 && n<=3431) sub="Departamento de Orientación, Tutorías y Apoyo Académico";
+    if(n>=3500 && n<=3548) sub="Coordinación Académica";
+    if(n>=3600 && n<=3601) sub="Homologación y Currículum";
+    if(n>=3700 && n<=3701) sub="Gestión Virtual";
+    if(n>=4000 && n<=4431) sub="Vinculación y Extensión";
+    if(n===4501) sub="Radio Comunitaria ITSC";
+    if(n>=4600 && n<=4631) sub="Servicios Estudiantiles";
+    return {division,sub}; }
+  D.forEach(r=>{const g=inferir(r.ext); r.division=g.division; r.subdivision=g.sub;});
+  return D;})()
+;
+
+// Selects División/Subdivisión
+const selDivision=document.getElementById('selDivision');
+const selSub=document.getElementById('selSub');
+(function fillDivs(){ const set=[...new Set(DATA.map(r=>r.division).filter(Boolean))].sort(); set.forEach(v=>{const o=document.createElement('option'); o.value=v;o.textContent=v; selDivision.appendChild(o)});})();
+function fillSubs(){ const dv=selDivision.value; selSub.innerHTML='<option value="">Todas</option>'; const pool=DATA.filter(r=>!dv||r.division===dv).map(r=>r.subdivision).filter(Boolean); [...new Set(pool)].sort().forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s; selSub.appendChild(o)});}
+
+// Búsqueda y ranking
+const ALIAS={ rrhh:'gestion humana recursos humanos', tic:'tecnologia informacion comunicacion', registro:'admision registro', orientacion:'orientacion tutorias apoyo academico', caja:'tesoreria pagos', probus:'operaciones redes desbloqueo probus'};
+function expandTokens(q){ const base=norm(q); if(!base) return []; const toks=base.split(/\s+/).filter(Boolean); const extra=[]; toks.forEach(t=>ALIAS[t]?.split(' ').forEach(x=>extra.push(x))); return [...new Set([...toks,...extra])]; }
+function scoreRow(row,tokens){ const hay=norm([row.puesto,row.ext,...(row.tags||[]),row.division,row.subdivision].join(' ')); let s=0; if(tokens.length===1 && tokens[0]===norm(row.ext)) s+=12; for(const t of tokens){ if(hay.includes(t)) s+=4; if(hay.split(/\s+/).some(w=>w.startsWith(t))) s+=3; if(hay.split(/\s+/).some(w=>{const a=w,b=t; const M=Math.max(a.length,b.length); let d=0; for(let i=0;i<Math.min(a.length,b.length);i++) if(a[i]!==b[i]) d++; return (Math.abs(a.length-b.length)+d)<=1;})) s+=2;} return s; }
+let activeExts=null;
+function baseFilter(){ const dv=selDivision.value,sb=selSub.value; const onlyPuestoExt=document.getElementById('puestoExt').checked; const soloCoord=document.getElementById('soloCoord').checked; const special=new Set(['0','300']); let rows=DATA.filter(r=>(!dv||r.division===dv)&&(!sb||r.subdivision===sb)); if(onlyPuestoExt) rows=rows.filter(r=>special.has(r.ext)); if(soloCoord){ const C=new Set(['3531','3532','3533','3534','3537','3538','3539','3543','3544','3545','3548']); rows=rows.filter(r=>C.has(r.ext)); } if(activeExts){ const S=new Set(activeExts); rows=rows.filter(r=>S.has(r.ext)); } return rows; }
+function search(q){ const tokens=expandTokens(q); const base=baseFilter(); if(!tokens.length) return base; return base.map((r,i)=>({row:r,i,s:scoreRow(r,tokens)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||a.i-b.i).map(x=>x.row); }
+
+// Render
+const R=document.getElementById('results'); const q=document.getElementById('q'); const countTop=document.getElementById('countTop'); const badge=document.getElementById('badgeCount'); const applied=document.getElementById('aplicados');
+function highlight(text,tokens){ let t=text; const escReg = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&'); tokens.forEach(tok=>{ if(!tok) return; const re=new RegExp('('+escReg(tok)+')','ig'); t=t.replace(re,'<mark>$1</mark>'); }); return t; }
+function render(list){ const tokens=expandTokens(q.value); const arr=list; const total=arr.length; badge.textContent= total+ (total===1?' resultado':' resultados'); countTop.textContent= badge.textContent; if(!arr.length){ R.innerHTML='<div style="padding:8px 0;color:#bcd0f0">Sin resultados. Intenta: <b>orientacion</b>, <b>registro</b>, <b>caja</b>, <b>4604</b>.</div>'; return; } R.innerHTML=arr.map((x,i)=>`<div class="item" data-i="${i}" tabindex="0"><div><div class="puesto">${highlight(x.puesto,tokens)}</div><div class="tagbar">${x.subdivision?`<span class=tag>${x.subdivision}</span>`:''}${x.division?`<span class=tag>${x.division}</span>`:''}${(x.tags||[]).map(t=>`<span class=tag>${t}</span>`).join('')}</div></div><div class="ext">${x.ext}</div></div>`).join(''); R.querySelectorAll('.item').forEach(el=> el.addEventListener('click',()=> copy(el.querySelector('.ext').textContent.trim())) ); }
+
+// Chips de filtros aplicados
+function updateChips(){ const dv=selDivision.value,sb=selSub.value,px=document.getElementById('puestoExt').checked,sc=document.getElementById('soloCoord').checked; applied.innerHTML=''; const push=(k,v)=>{ const chip=document.createElement('span'); chip.className='chip'; chip.innerHTML=`${k}: <b>${v}</b> <button title="Quitar">×</button>`; chip.querySelector('button').onclick=()=>{ if(k==='División') selDivision.value=''; if(k==='Subdivisión') selSub.value=''; if(k==='Puesto Ext') document.getElementById('puestoExt').checked=false; if(k==='Coordinadores') document.getElementById('soloCoord').checked=false; fillSubs(); render(search(q.value)); updateChips(); }; applied.appendChild(chip);};
+  if(dv) push('División',dv); if(sb) push('Subdivisión',sb); if(px) push('Puesto Ext','Sí'); if(sc) push('Coordinadores','Sí'); if(activeExts){ const chip=document.createElement('span'); chip.className='chip'; chip.innerHTML=`Caso: <b>${activeExts.join(', ')}</b> <button title="Quitar">×</button>`; chip.querySelector('button').onclick=()=>{ activeExts=null; render(search(q.value)); updateChips(); }; applied.appendChild(chip);} }
+
+// Eventos básicos
+q.addEventListener('input',()=>{ activeExts=null; render(search(q.value)); updateChips();});
+window.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){ e.preventDefault(); q.focus(); q.select(); } if(e.key==='Escape'){ q.value=''; selDivision.value=''; fillSubs(); selSub.value=''; document.getElementById('puestoExt').checked=false; document.getElementById('soloCoord').checked=false; activeExts=null; render(DATA); updateChips(); closeDD(); } if(e.key==='Enter'){ const first=R.querySelector('.item .ext'); if(first){ copy(first.textContent.trim()); }} });
+
+selDivision.addEventListener('change',()=>{ fillSubs(); render(search(q.value)); updateChips();});
+selSub.addEventListener('change',()=>{ render(search(q.value)); updateChips();});
+document.getElementById('puestoExt').addEventListener('change',()=>{ render(search(q.value)); updateChips();});
+document.getElementById('soloCoord').addEventListener('change',()=>{ render(search(q.value)); updateChips();});
+
+// Dropdowns: Filtros y Casos
+const ddFiltros=document.getElementById('ddFiltros');
+const ddCasos=document.getElementById('ddCasos');
+function closeDD(){ ddFiltros.classList.remove('open'); ddCasos.classList.remove('open'); }
+document.getElementById('btnFiltros').addEventListener('click',()=>{ const isOpen=ddFiltros.classList.contains('open'); closeDD(); if(!isOpen) ddFiltros.classList.add('open'); });
+document.getElementById('btnCasos').addEventListener('click',()=>{ const isOpen=ddCasos.classList.contains('open'); closeDD(); if(!isOpen) ddCasos.classList.add('open'); });
+document.getElementById('btnCerrarFiltros').addEventListener('click',closeDD);
+document.addEventListener('click',e=>{ const t=e.target; if(!t.closest('.toolbar')) closeDD(); },{capture:true});
+
+// Casos frecuentes
+const CASOS=[
+  {t:'Problemas de acceso estudiantil',d:'Contraseña/Teams/Probus/Intranet/Internet → 4604',exts:'4604'},
+  {t:'Moodle no carga asignaturas',d:'Gestión Virtual → 3700',exts:'3700'},
+  {t:'Calificaciones en Probus',d:'Registro/Calificaciones → 3322',exts:'3322'},
+  {t:'Récord de notas',d:'Registro → 3325 / 3326',exts:'3325,3326'},
+  {t:'No aparece horario en Probus',d:'Registro/Atención → 3325/3326/3320',exts:'3325,3326,3320'},
+  {t:'Pagos / deudas',d:'Caja (Tesorería) → 2232',exts:'2232'},
+  {t:'Inscripciones',d:'Admisión y Registro → 3312/3300/3310',exts:'3312,3300,3310'},
+  {t:'Titulación / Graduación',d:'Registro → 3324',exts:'3324'},
+  {t:'Cambio de carrera',d:'Registro → 3323',exts:'3323'},
+  {t:'Retiro de asignaturas',d:'Registro → 3300/3320/3325/3326',exts:'3300,3320,3325,3326'},
+  {t:'Lenguas Extranjeras (Inglés)',d:'División → 3201',exts:'3201'},
+  {t:'Homologación',d:'Homologación → 3600',exts:'3600'},
+  {t:'Cursos en Moodle pero no en Probus',d:'Registro/Atención',exts:'3325,3326,3320'},
+  {t:'Apoyo académico',d:'Apoyo Académico → 3431',exts:'3431'},
+  {t:'Tutorías',d:'Orientación → 3411',exts:'3411'},
+  {t:'Situación entre estudiantes',d:'Orientación → 3422/3424/3425',exts:'3422,3424,3425'},
+  {t:'Autobús ITSC',d:'Servicios Estudiantiles → 4604',exts:'4604'},
+  {t:'Empleado: red administrativa',d:'TIC → 1740 / 1700',exts:'1740,1700'},
+  {t:'Docente: red Docencia',d:'TIC → 1740 / 1700',exts:'1740,1700'},
+  {t:'Arte y Cultura (música)',d:'Arte y Cultura → 4631',exts:'4631'},
+  {t:'Inglés por Inmersión',d:'Becas → 4602',exts:'4602'},
+  {t:'Reingreso',d:'Registro → 3300/3325/3326',exts:'3300,3325,3326'},
+  {t:'Examen POMA / charlas',d:'Orientación → 3400',exts:'3400'},
+  {t:'No recuerdo matrícula (reingreso)',d:'Registro + Servicios Est. ',exts:'3325,3326,3320,4604,3300'},
+  {t:'Equipos estudiantiles',d:'Servicios Estudiantiles → 4601',exts:'4601'},
+  {t:'Queja con profesor',d:'Servicios Est. + Coord. Acad. → 4604/3500',exts:'4604,3500'},
+  {t:'Coordinadores de carrera',d:'Filtro solo coordinadores',exts:'3531,3532,3533,3534,3537,3538,3539,3543,3544,3545,3548'},
+];
+const casosEl=document.getElementById('casos');
+casosEl.innerHTML=CASOS.map(c=>`<div class="case" data-exts="${c.exts}"><strong>${c.t}</strong><small>${c.d}</small></div>`).join('');
+Array.from(document.querySelectorAll('.case')).forEach(b=> b.addEventListener('click',()=>{ const exts=(b.dataset.exts||'').split(',').map(s=>s.trim()).filter(Boolean); activeExts=exts.length?exts:null; q.value=''; render(search(q.value)); updateChips(); closeDD(); const y=document.getElementById('results').offsetTop-6; window.scrollTo({top:y,behavior:'smooth'}); }));
+
+// CSV + Limpiar
+const dl=(name,content)=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([content],{type:'text/csv;charset=utf-8;'})); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
+const toCSV=rows=> 'puesto,ext,division,subdivision\n'+rows.map(r=>`"${r.puesto.replace(/"/g,'""')}","${r.ext}","${r.division||''}","${r.subdivision||''}"`).join('\n');
+document.getElementById('btnCSV').addEventListener('click',()=> dl('extensiones-itsc.csv', toCSV(DATA)));
+document.getElementById('btnLimpiar').addEventListener('click',()=>{ q.value=''; selDivision.value=''; fillSubs(); selSub.value=''; document.getElementById('puestoExt').checked=false; document.getElementById('soloCoord').checked=false; activeExts=null; updateChips(); render(DATA); closeDD(); });
+
+// Inicializar
+fillSubs();
+render(DATA);
+updateChips();
+</script>
+</body>
+</html>
